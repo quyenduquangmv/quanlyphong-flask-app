@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Lịch Đặt Phòng{% endblock %}
+
+{% block head %}
+<style>
+    .calendar-container { background-color: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .calendar-header h1 { margin: 0; font-size: 1.8rem; }
+    .nav-button { background-color: #6c757d; color: white; padding: .5rem 1rem; text-decoration: none; border-radius: 5px; }
+    .revenue-display { text-align: center; font-size: 1.5rem; font-weight: bold; color: #28a745; margin-bottom: 2rem; }
+    .calendar-table { width: 100%; border-collapse: collapse; }
+    .calendar-table th, .calendar-table td { width: 14.28%; height: 120px; border: 1px solid #e9ecef; vertical-align: top; padding: 8px; }
+    .calendar-table th { text-align: center; padding: 12px; background-color: #f8f9fa; }
+    .day-number { font-weight: bold; font-size: 1.1rem; }
+    .day-cell.outside-month { background-color: #f8f9fa; }
+    .booking-item { background-color: #007bff; color: white; padding: 4px 6px; border-radius: 4px; font-size: 0.8rem; margin-top: 5px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="calendar-container">
+    <div class="calendar-header">
+        <a href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}" class="nav-button">&lt; Tháng trước</a>
+        <h1>Tháng {{ month_name }} {{ year }}</h1>
+        <a href="{{ url_for('calendar_view', year=next_year, month=next_month) }}" class="nav-button">Tháng sau &gt;</a>
+    </div>
+
+    <div class="revenue-display">
+        Tổng doanh thu: {{ "{:,.0f} VNĐ".format(total_revenue) }}
+    </div>
+
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                <th>Thứ Hai</th><th>Thứ Ba</th><th>Thứ Tư</th><th>Thứ Năm</th><th>Thứ Sáu</th><th>Thứ Bảy</th><th>Chủ Nhật</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for week in calendar_weeks %}
+            <tr>
+                {% for day in week %}
+                    {% if day == 0 %}
+                        <td class="day-cell outside-month"></td>
+                    {% else %}
+                        <td class="day-cell">
+                            <div class="day-number">{{ day }}</div>
+                            {% if day in bookings_by_day %}
+                                {% for booking in bookings_by_day[day] %}
+                                    <div class="booking-item" title="{{ booking.room_name }} | {{ "{:,.0f} VNĐ".format(booking.price) }} | {{ booking.notes }}">
+                                        {{ booking.room_name }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
