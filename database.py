@@ -165,5 +165,5 @@ def calculate_grand_total_revenue():
         result = connection.execute(text("SELECT SUM(price) FROM bookings"))
         total = result.scalar_one_or_none() # .scalar_one_or_none() là cách an toàn để lấy giá trị đơn
     return total if total is not None else 0
-if __name__ == '__main__':
-    init_db()
+# if __name__ == '__main__':
+#     init_db()
