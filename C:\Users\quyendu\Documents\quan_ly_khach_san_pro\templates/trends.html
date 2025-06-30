@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+
+{% block title %}Xu hướng tại Mèo Vạc, Hà Giang{% endblock %}
+
+{% block head %}
+    <style>
+        .header-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .refresh-btn { background-color: #17a2b8; color: white; padding: .75rem 1.5rem; border: none; border-radius: 5px; font-size: 1rem; cursor: pointer; text-decoration: none; }
+        .refresh-btn:hover { background-color: #138496; }
+        .results-container { margin-top: 2rem; }
+        .result-section { background-color: #fff; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        h3 { border-bottom: 2px solid #eee; padding-bottom: .5rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+        th, td { text-align: left; padding: .75rem; border-bottom: 1px solid #ddd; }
+        th { background-color: #f2f2f2; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="header-container">
+        <h1>Phân tích Xu hướng: Mèo Vạc, Hà Giang</h1>
+        <a href="{{ url_for('trang_xu_huong') }}" class="refresh-btn">Cập nhật & Phân tích lại</a>
+    </div>
+    
+    {% if results and not results.error %}
+    <div class="results-container">
+        
+        {% if results.top_keyword %}
+        <div class="result-section">
+            <h3>🔥 Loại hình được quan tâm nhất trong tháng qua</h3>
+            <p style="font-size: 1.2rem; font-weight: bold;">{{ results.top_keyword }}</p>
+        </div>
+        {% endif %}
+
+        {% if results.rising_queries and not results.rising_queries.empty %}
+        <div class="result-section">
+            <h3>💡 Các truy vấn đang TĂNG MẠNH (Nhu cầu mới nổi)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Truy vấn</th>
+                        <th>Mức tăng</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in results.rising_queries.iterrows() %}
+                    <tr>
+                        <td>{{ row.query }}</td>
+                        <td>+{{ row.value }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% elif not results.top_keyword %}
+        <p>Không tìm thấy dữ liệu về các truy vấn đang tăng mạnh.</p>
+        {% endif %}
+
+        {% if results.top_queries and not results.top_queries.empty %}
+        <div class="result-section">
+            <h3>⭐ Các truy vấn PHỔ BIẾN NHẤT (Nhu cầu cốt lõi)</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Truy vấn</th>
+                        <th>Mức độ phổ biến (0-100)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for index, row in results.top_queries.iterrows() %}
+                    <tr>
+                        <td>{{ row.query }}</td>
+                        <td>{{ row.value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% elif not results.top_keyword %}
+         <p>Không tìm thấy dữ liệu về các truy vấn phổ biến.</p>
+        {% endif %}
+    </div>
+    {% elif error %}
+        <div class="results-container">
+            <p style="color: red; font-weight: bold;">Lỗi: {{ error }}</p>
+        </div>
+    {% else %}
+        <div class="results-container">
+            <p>Không có đủ dữ liệu để phân tích cho khu vực này.</p>
+        </div>
+    {% endif %}
+{% endblock %}
