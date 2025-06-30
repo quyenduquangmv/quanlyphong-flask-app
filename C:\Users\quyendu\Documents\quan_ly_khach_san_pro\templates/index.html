@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Bảng điều khiển{% endblock %}
+
+{% block head %}
+    <style>
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .stat-card h3 {
+            margin-top: 0;
+            color: #6c757d;
+        }
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #28a745;
+            margin-bottom: 0;
+        }
+        .room-list { list-style: none; padding: 0; }
+        .room-item { background-color: #fff; border: 1px solid #dee2e6; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+        .room-name { font-size: 1.5rem; font-weight: bold; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 10px; }
+        .bookings-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .bookings-table th, .bookings-table td { text-align: left; padding: 8px; border-bottom: 1px solid #f0f0f0; }
+        .bookings-table th { font-weight: bold; }
+        .no-bookings { color: #888; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Tổng quan Kinh doanh</h1>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <h3>Doanh thu Năm {{ current_year }}</h3>
+            <p>{{ "{:,.0f} VNĐ".format(yearly_revenue) }}</p>
+        </div>
+        <div class="stat-card">
+            <h3>Tổng Doanh thu (từ trước đến nay)</h3>
+            <p>{{ "{:,.0f} VNĐ".format(grand_total) }}</p>
+        </div>
+    </div>
+    
+    <hr>
+
+    <h2>Trạng thái Đặt phòng Chi tiết</h2>
+    <ul class="room-list">
+        {% for room in rooms %}
+            <li class="room-item">
+                <div class="room-name">{{ room['name'] }}</div>
+                
+                {% if room.bookings %}
+                    <table class="bookings-table">
+                        <thead>
+                            <tr>
+                                <th>Từ ngày</th>
+                                <th>Đến ngày</th>
+                                <th>Nguồn</th>
+                                <th>Giá</th>
+                                <th>Quốc gia</th>
+                                <th>Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for booking in room.bookings %}
+                            <tr>
+                                <td>{{ booking.start_date }}</td>
+                                <td>{{ booking.end_date }}</td>
+                                <td>{{ booking.source }}</td>
+                                <td>{{ "{:,.0f} VNĐ".format(booking.price) }}</td>
+                                <td>{{ booking.guest_country }}</td>
+                                <td>{{ booking.notes }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="no-bookings">Chưa có lịch đặt phòng nào.</p>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
