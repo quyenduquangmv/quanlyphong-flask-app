@@ -107,7 +107,9 @@ def get_bookings_for_month(year, month):
     month_str = f"{year}-{month:02d}"
     conn = sqlite3.connect(DATABASE_FILE)
     conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()def get_bookings_for_month(year, month):
+    cursor = conn.cursor()
+
+def get_bookings_for_month(year, month):
     """Lấy tất cả các lượt đặt phòng trong một tháng/năm cụ thể."""
     month_str = f"{year}-{month:02d}"
     with engine.connect() as connection:
