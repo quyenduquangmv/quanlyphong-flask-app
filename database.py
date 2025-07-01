@@ -16,7 +16,6 @@ if not DATABASE_URL:
 engine = create_engine(DATABASE_URL)
 
 # --- KẾT THÚC PHẦN CẤU HÌNH ---
-
 def init_db():
     """
     Hàm này sẽ được chạy một lần duy nhất để khởi tạo cơ sở dữ liệu.
