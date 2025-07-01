@@ -107,11 +107,7 @@ def get_bookings_for_month(year, month):
         
         result = connection.execute(query, {"month_str": month_str})
         bookings = [dict(row._mapping) for row in result]
-    # Dòng này kết thúc câu lệnh.
-cursor = conn.cursor()
-
-# Hàm mới phải bắt đầu ở một dòng mới, không có thụt lề.
-def get_bookings_for_month(year, month):
+    return bookings
 
 def calculate_monthly_revenue(year, month):
     """Tính tổng doanh thu trong một tháng/năm cụ thể."""
